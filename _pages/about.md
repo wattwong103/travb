@@ -1,78 +1,25 @@
 ---
-title: "About"
-layout: gridlay
-sitemap: false
-permalink: /about/
+layout: about
+title: about
+permalink: /
+subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+
+profile:
+  align: right
+  image: prof_pic.jpg
+  image_circular: false # crops the image to make it circular
+  more_info: >
+    <p>555 your office number</p>
+    <p>123 your address street</p>
+    <p>Your City, State 12345</p>
+
+news: true # includes a list of news items
+selected_papers: true # includes a list of papers marked as "selected={true}"
+social: true # includes social icons at the bottom of the page
 ---
 
-## About
+Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
 
-{% for member in site.data.pi %}
+Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
 
-<div class="jumbotron">
-<div class="row">
-<div class="col-sm-4">
-  <img src="{{ site.url }}{{ site.baseurl }}/images/{{ member.photo }}" width="100%" style="max-width:250px"/>
-</div>
-<div class="col-sm-8 col-xs-12">
-  <h3>{{ member.name }}</h3>
-  <h4><i>{{ member.info }}</i></h4>
-  {% if member.email %}<a href="mailto:{{ member.email }}" target="_blank"><i class="fa fa-envelope-square fa-3x"></i></a> {% endif %}
-  {% if member.cv %} <a href="{{ site.url }}{{ site.baseurl }}/{{ member.cv }}" target="_blank"><i class="ai ai-cv-square ai-3x"></i></a> {% endif %}
-  {% if member.scholar %} <a href="{{ member.scholar }}" target="_blank"><i class="ai ai-google-scholar-square ai-3x"></i></a> {% endif %}
-  {% if member.github %} <a href="{{ member.github }}" target="_blank"><i class="fa fa-github-square fa-3x"></i></a> {% endif %}
-  {% if member.researchgate %} <a href="{{ member.researchgate }}" target="_blank"><i class="ai ai-researchgate-square ai-3x"></i></a> {% endif %}
-
-  <ul style="overflow: hidden">
-    {% for education in member.education %}
-      <li>{{ education | replace: "-","&#8211;" }}</li>
-    {% endfor %}
-  </ul>
-
-</div>
-</div>
-</div>
-{% endfor %}
-
-{% if site.data.grants %}
-
-<div class="jumbotron">
-  <h3>Grants</h3>
-  <ul>
-    {% for grant in site.data.grants %}
-      <li>{{ grant.name }}</li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
-
-{% if site.data.awards %}
-
-<div class="jumbotron">
-  <h3>Awards</h3>
-  <ul>
-    {% for award in site.data.awards %}
-      <li>{{ award.name | replace: "-","&#8211;" }}</li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
-
-{% if site.data.people %}
-
-<div class="jumbotron">
-  <h3>Students and Mentoring</h3>
-  <ul>
-    {% for student in site.data.people %}
-      <li>{{ student.name }}, {{ student.location }} ({{ student.degree }}, {{ student.year }})</li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
-
-<div class="jumbotron">
-  <h4>Sponsors</h4>
-  <div style='display:block; text-align:center; margin-left:auto; margin-right:auto;'>
-  {% for funder in site.data.funders %}<a href="{{ funder.url }}" target="_blank"><img src='{{ site.url }}{{ site.baseurl }}/images/{{ funder.image }}' style='max-height: 80px; max-width: 200px; margin: 1%'/></a>{% endfor %}
-  </div>
-</div>
+Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
