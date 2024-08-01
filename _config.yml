@@ -2,8 +2,8 @@ title:              SLIM
 email:              slim.msu@gmail.com
 description:        Signals, Learning and Imaging Research Group
 author:             SLIM
-baseurl:            "wattwong103.github.io"
-url:                "/travb"         
+baseurl:            ""
+url:                "wattwong103.github.io"         
 
 # Social Profiles
 twitter_username: SLIMGroupmsu
