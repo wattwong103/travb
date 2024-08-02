@@ -1,12 +1,12 @@
 ---
-title: "Complex Additive Materials Group | Department of Engineering at the University of Cambridge"
+title: "Travel Behavior Research Group | Department of Civil Engineering at Chulalongkorn University"
 layout: homelay
-excerpt: "Complex Additive Materials Group | Department of Engineering at the University of Cambridge"
+excerpt: "Travel Behavior Research Group | Department of Civil Engineering at Chulalongkorn University"
 sitemap: false
 permalink: /
 ---
 
-We are based at the [Institute for Manufacturing](https://ifm.eng.cam.ac.uk) in the [Department of Engineering](http://www.eng.cam.ac.uk/) at the [University of Cambridge](https://cam.ac.uk) using materials chemistry, additive manufacturing, and machine learning to realize entirely new devices and materials whose structure and composition is optimized from the nano- to the macro-scale to improve interaction with the human body and enhance lives.
+The Travel Behavior Research Group (TBRG) is based at the [Department of Civil Engineering](https://civil.eng.chula.ac.th/web/) at [Chulalongkorn University](https://www.chula.ac.th/). Our research aims to uncover the underlying factors influencing how individuals make travel decisions, the impact of these choices on transportation systems, and the broader implications for urban planning and policy. By integrating insights from fields such as transportation engineering, urban studies, psychology, and economics, TBRG seeks to develop innovative solutions that enhance mobility, reduce congestion, and promote sustainable travel practices. 
 
 <div markdown="0" id="carousel" class="carousel slide" data-ride="carousel" data-interval="5000" data-pause="hover" >
     <!-- Menu -->
