@@ -45,18 +45,18 @@ The Travel Behavior Research Group (TBRG) is based at the [Department of Civil E
   </a>
 </div>
 
-**Photo credits:** © Felice Frankel, research scientist, Department of Chemical Engineering at MIT, Douglas Brion, PhD student, Department of Engineering at University of Cambridge
+**Photo credits:** © Department of Civil Engineering Chula
 
 
 The group is working on:
 
-**Digitally tailored medical devices**  
-Producing wearable and implantable medical devices that better mimic and integrate with patients/wearers.
+**Transportation Engineering**  
+Focuses on the design, construction, and maintenance of transportation systems. We aims to ensure safe, efficient, and sustainable movement of people and goods.
 
-**Materials for additive manufacturing**  
-Developing new materials whose structure and composition enable unique functionality.
+**Travel Behavior Surveys & Analysis**  
+Collects and examines data on how people travel, including their mode choices, travel times, and trip purposes. This research helps understand travel patterns and preferences, informing policies and strategies to improve transportation systems.
 
-**Learning 3D printers**  
-Understanding how machine learning approaches can improve the capabilities of 3D printers.
+**Transportation Planning**  
+Develops strategies and plans to meet current and future transportation needs. It involves assessing existing transportation networks, forecasting future demands, and designing projects that enhance mobility and accessibility.
 
 <br>
