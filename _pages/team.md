@@ -10,7 +10,7 @@ permalink: /team/
 
 **If you are interested in either a Ph.D. or postdoctoral position please get in touch! There is currently an opening for a postdoc/RA!**
 
-## Staff
+## Faculty
 
 {% assign number_printed = 0 %}
 {% for member in site.data.team_members %}
