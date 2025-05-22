@@ -6,17 +6,21 @@ sitemap: false
 permalink: /research/
 ---
 
-# Research
+## Research
 
-The Complex Additive Materials Group uses materials chemistry, additive manufacturing, and machine learning to realise entirely new devices and materials whose structure and composition is optimised from the nano- to the macro-scale to improve interaction with the human body and enhance lives.
+The Travel Behavior Research Group integrates transportation engineering, behavioral psychology, data science, and urban planning to understand complex mobility patterns and develop evidence-based solutions that enhance transportation systems, promote sustainable travel choices, and improve accessibility for diverse populations across multiple spatial and temporal scales.
 
-![]({{ site.url }}{{ site.baseurl }}/images/respic/venn_diagram.jpg){: style="width: 300px; float: right; border: 10px"}
+**Mobility pattern analysis** Understanding how people move through urban and rural environments using GPS tracking, mobile data, and machine learning to identify travel behaviors and preferences.
 
-**Digitally tailored medical devices**  
-Producing wearable and implantable medical devices that better mimic and integrate with patients/wearers.
+**Transportation choice modeling** Developing predictive models that explain why people choose specific modes of transport, routes, and travel times based on personal, social, and environmental factors.
 
-**Materials for additive manufacturing**  
-Developing new materials whose structure and composition enable unique functionality.
+**Smart mobility systems** Integrating behavioral insights with emerging transportation technologies like autonomous vehicles, shared mobility, and multimodal planning platforms to enhance user experience and system efficiency.
 
-**Learning 3D printers**  
-Understanding how machine learning approaches can improve the capabilities of 3D printers.
+**Travel demand forecasting** Creating advanced models to predict future transportation needs using demographic trends, land use patterns, and behavioral change indicators for infrastructure planning.
+
+**Sustainable transportation behavior** Investigating factors that influence adoption of eco-friendly travel modes and designing interventions to promote low-carbon mobility choices.
+
+**Transportation equity and accessibility** Analyzing how transportation systems serve different socioeconomic groups and developing strategies to improve mobility access for underserved communities.
+
+
+![]({{ site.url }}{{ site.baseurl }}/images/respic/venn_diagram.png){: style="width: 300px; float: right; border: 10px"}
