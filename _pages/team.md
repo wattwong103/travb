@@ -1,7 +1,7 @@
 ---
-title: "Team | Complex Additive Materials Group | Department of Engineering at the University of Cambridge"
+title: "Team | Travel Behavior Research Group"
 layout: gridlay
-excerpt: "Team | Complex Additive Materials Group | Department of Engineering at the University of Cambridge"
+excerpt: "Team | Travel Behavior Research Group"
 sitemap: false
 permalink: /team/
 ---
@@ -86,6 +86,40 @@ permalink: /team/
 </div>
 {% endif %}
 
+## Researchers
+
+{% assign number_printed = 0 %}
+{% for member in site.data.researchers %}
+
+{% assign even_odd = number_printed | modulo: 2 %}
+
+{% if even_odd == 0 %}
+<div class="row">
+{% endif %}
+
+<div class="col-sm-6 clearfix">
+  <img src="{{ site.url }}{{ site.baseurl }}/images/teampic/{{ member.photo }}" class="img-responsive" width="25%" style="float: left" />
+  <h4>{{ member.name }}</h4>
+  <i>{{ member.duration }} <br> Role: {{ member.info }}</i>
+  <ul style="overflow: hidden">
+
+  </ul>
+</div>
+
+{% assign number_printed = number_printed | plus: 1 %}
+
+{% if even_odd == 1 %}
+</div>
+{% endif %}
+
+{% endfor %}
+
+{% assign even_odd = number_printed | modulo: 2 %}
+{% if even_odd == 1 %}
+</div>
+{% endif %}
+
+
 ## Master and Bachelor Students
 
 {% assign number_printed = 0 %}
@@ -147,38 +181,7 @@ permalink: /team/
 </div>
 {% endif %}
 
-<!-- ## Alumni
 
-{% assign number_printed = 0 %}
-{% for member in site.data.alumni_members %}
-
-{% assign even_odd = number_printed | modulo: 2 %}
-
-{% if even_odd == 0 %}
-<div class="row">
-{% endif %}
-
-<div class="col-sm-6 clearfix">
-  <img src="{{ site.url }}{{ site.baseurl }}/images/teampic/{{ member.photo }}" class="img-responsive" width="25%" style="float: left" />
-  <h4>{{ member.name }}</h4>
-  <i>{{ member.duration }} <br> Role: {{ member.info }}</i>
-  <ul style="overflow: hidden">
-
-  </ul>
-</div>
-
-{% assign number_printed = number_printed | plus: 1 %}
-
-{% if even_odd == 1 %}
-</div>
-{% endif %}
-
-{% endfor %}
-
-{% assign even_odd = number_printed | modulo: 2 %}
-{% if even_odd == 1 %}
-</div>
-{% endif %} -->
 
 ## Former visitors, BSc/ MSc students
 
@@ -199,7 +202,7 @@ permalink: /team/
 </div>
 
 <div class="col-sm-4 clearfix">
-<h4>UROP Students</h4>
+<h4>Bachelor Students</h4>
 {% for member in site.data.alumni_bsc %}
 {{ member.name }}
 {% endfor %}

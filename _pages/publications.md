@@ -1,7 +1,7 @@
 ---
-title: "Publications | Complex Additive Materials Group | Department of Engineering at the University of Cambridge"
+title: "Publications | Travel Behavior Research Group"
 layout: gridlay
-excerpt: "Publications | Complex Additive Materials Group | Department of Engineering at the University of Cambridge"
+excerpt: "Publications | Travel Behavior Research Group"
 sitemap: false
 permalink: /publications/
 ---
