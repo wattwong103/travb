@@ -10,16 +10,6 @@ permalink: /data/
 
 The Travel Behavior Research Group is committed to advancing transportation research through open science and data sharing. We believe that making our research data publicly available accelerates scientific discovery, promotes transparency, and enables other researchers to build upon our work.
 
-## What is Open Data?
-
-Open data refers to data that can be freely accessed, used, modified, and shared by anyone for any purpose. In transportation research, open data plays a crucial role in:
-
-- **Enabling reproducible research** by allowing other researchers to validate and build upon our findings
-- **Facilitating cross-institutional collaboration** and comparative studies across different regions and contexts
-- **Supporting evidence-based policy making** by providing policymakers with access to comprehensive datasets
-- **Accelerating innovation** in transportation planning and travel behavior modeling
-- **Promoting educational opportunities** for students and researchers worldwide
-
 ## Our Data Sharing Principles
 
 We are committed to following best practices in data sharing while ensuring:
