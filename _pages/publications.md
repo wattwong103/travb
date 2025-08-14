@@ -8,6 +8,8 @@ permalink: /publications/
 
 # Publications
 
+For a full list go to [Google Scholar](https://scholar.google.com/citations?hl=en&user=oLV6IeQAAAAJ).
+
 <!-- ## Highlights
 
 (For a full list see [below](#full-list) or go to [Google Scholar](https://scholar.google.com/citations?user=I8dpTJMAAAAJ&hl=en).
