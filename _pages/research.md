@@ -23,4 +23,5 @@ The Travel Behavior Research Group integrates transportation engineering, behavi
 **Transportation equity and accessibility** Analyzing how transportation systems serve different socioeconomic groups and developing strategies to improve mobility access for underserved communities.
 
 
+
 ![]({{ site.url }}{{ site.baseurl }}/images/respic/venn_diagram.png){: style="width: 300px; float: right; border: 10px"}
