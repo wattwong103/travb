@@ -16,6 +16,7 @@
           254 Phayathai Rd<br>
           Pathumwan, Bangkok 10330<br>
           Thailand<br>
+          {% if site.office %}{{ site.office }}<br>{% endif %}
           <a href="{{ site.maps_url }}" target="_blank" rel="noopener">Map</a>
         </p>
       </div>
@@ -23,6 +24,7 @@
         <p class="footer-kicker">Contact</p>
         <p>
           <a href="mailto:{{ site.email }}">{{ site.email }}</a><br>
+          {% if site.phone %}{{ site.phone }}<br>{% endif %}
           <a href="{{ site.scholar_url }}" target="_blank" rel="noopener">Google Scholar</a>
         </p>
       </div>

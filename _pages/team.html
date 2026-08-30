@@ -30,14 +30,29 @@ permalink: /team/
 {% endif %}
 <div>
 <h3>{{ member.name }}</h3>
+{% if member.thai %}<p class="person-role">{{ member.thai }}</p>{% endif %}
 <p class="person-role">{{ member.info }}</p>
 {% if member.email %}<p class="person-meta">Email: <a href="mailto:{{ member.email }}">{{ member.email }}</a></p>{% endif %}
+{% if member.office %}<p class="person-meta">Office: {{ member.office }}</p>{% endif %}
+{% if member.phone %}<p class="person-meta">Phone: {{ member.phone }}</p>{% endif %}
 {% if member.scholar %}
 <p class="person-meta"><a href="{{ member.scholar }}" target="_blank" rel="noopener">Google Scholar</a></p>
 {% elsif member.email == site.email %}
 <p class="person-meta"><a href="{{ site.scholar_url }}" target="_blank" rel="noopener">Google Scholar</a></p>
 {% endif %}
+{% if member.researchgate %}<p class="person-meta"><a href="{{ member.researchgate }}" target="_blank" rel="noopener">ResearchGate</a></p>{% endif %}
+{% if member.department_page %}<p class="person-meta"><a href="{{ member.department_page }}" target="_blank" rel="noopener">Department profile</a></p>{% endif %}
 {% if member.bio %}<p class="person-bio">{{ member.bio }}</p>{% endif %}
+{% if member.education %}
+<ul class="person-educ">
+{% for ed in member.education %}
+<li>{{ ed }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if member.interests %}
+<p class="person-meta">Research: {{ member.interests | join: "; " }}.</p>
+{% endif %}
 </div>
 </article>
 </div>

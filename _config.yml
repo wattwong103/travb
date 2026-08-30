@@ -7,6 +7,8 @@ tagline: >
   Research on travel behavior, mobility systems, and
   transportation planning in Bangkok and beyond.
 email: Pongsun.B@chula.ac.th
+phone: "0-2218-7857"
+office: "CE Building, Room 527"
 description: >
   The Travel Behavior Research Group (TBRG) is based in the
   Department of Civil Engineering at Chulalongkorn University.
@@ -25,6 +27,7 @@ scholar_url: https://scholar.google.com/citations?hl=en&user=oLV6IeQAAAAJ
 department_url: https://civil.eng.chula.ac.th/web/
 faculty_url: https://www.eng.chula.ac.th/
 university_url: https://www.chula.ac.th/
+pongsun_url: https://civil.eng.chula.ac.th/web/pongsun-bunditsakulchai/
 
 include:
   - .htaccess
