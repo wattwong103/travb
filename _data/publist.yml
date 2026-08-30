@@ -1,5 +1,12 @@
 # Publications. Prefer the /admin editor.
 items:
+  - title: "Spatiotemporal dynamics of land use and ridership: a geographically weighted regression analysis of Bangkok’s MRT blue line"
+    description: Geographically weighted regression of land use and ridership along Bangkok’s MRT Blue Line.
+    authors: Watcharapong Wongkaew, Kongtup Wanichjaroenporn, Pongsun Bunditsakulchai
+    link:
+      url: https://doi.org/10.1007/s12469-026-00428-y
+      display: "DOI: 10.1007/s12469-026-00428-y"
+
   - title: "Characteristics of individuals at risk of malnutrition in Thailand: an investigation focusing on income insecurity"
     description: This study examines factors influencing malnutrition risk in Thailand, focusing on the role of income insecurity.
     authors: Pechdin W., Bunditsakulchai P.
@@ -90,3 +97,31 @@ items:
     link:
       url: https://doi.org/10.32479/ijeep.15987
       display: "DOI: 10.32479/ijeep.15987"
+
+  - title: "Review of the Potential for Constructing Inter-regional Input-Output Table for Thailand and the Application for Transportation and Logistic Research"
+    description: Review of inter-regional input-output tables for Thailand and uses in transportation and logistics research.
+    authors: Bunditsakulchai P.
+    link:
+      url: http://www.cuti.chula.ac.th/translog/translog2016-p7.pdf
+      display: "TransLog 9(1), 2016"
+
+  - title: "Household electricity demand forecast and energy savings potential for Vientiane, Lao PDR"
+    description: Forecast of household electricity demand and energy-savings potential in Vientiane.
+    authors: Kleebrang W., Bunditsakulchai P., Wangjiraniran W.
+    link:
+      url: https://doi.org/10.1080/14786451.2015.1017501
+      display: "DOI: 10.1080/14786451.2015.1017501"
+
+  - title: "Management of Disruptive Technologies by the Rule of Law – The Case Study of Uber in Thailand"
+    description: Case study of Uber in Thailand, in IDE-JETRO World Trend No. 267 (in Japanese).
+    authors: Bunditsakulchai P.
+    link:
+      url: https://www.ide.go.jp/English.html
+      display: "IDE-JETRO World Trend No. 267, 2018"
+
+  - title: "Economic and environmental implications of economic integration in East Asia"
+    description: Book chapter in Green Growth and Low Carbon Development in East Asia.
+    authors: Kojima S., Bunditsakulchai P., Moinuddin M.
+    link:
+      url: https://www.taylorfrancis.com/chapters/edit/10.4324/9781315695860-10/economic-environmental-implications-economic-integration-east-asia-satoshi-kojima-pongsun-bunditsakulchai-mustafa-moinuddin
+      display: "Routledge, 2015"
