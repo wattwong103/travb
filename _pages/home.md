@@ -41,12 +41,18 @@ permalink: /
   <a href="{{ '/team/' | relative_url }}">Directory</a>
 </div>
 <div class="people-strip">
-{% for member in site.data.team_members %}
+{% assign faculty = site.data.team_members.items | default: site.data.team_members %}
+{% for member in faculty %}
   {% include person_flags.html %}
   {% unless is_placeholder %}
   <article class="person-card">
     {% if member.photo %}
-      <img class="person-photo" src="{{ '/images/teampic/' | append: member.photo | relative_url }}" alt="{{ member.name }}">
+      {% if member.photo contains "/" %}
+        {% assign photo_src = member.photo %}
+      {% else %}
+        {% assign photo_src = "/images/teampic/" | append: member.photo %}
+      {% endif %}
+      <img class="person-photo" src="{{ photo_src | relative_url }}" alt="{{ member.name }}">
     {% else %}
       <div class="person-fallback" aria-hidden="true">{{ member.name | slice: 0 }}</div>
     {% endif %}

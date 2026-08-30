@@ -12,17 +12,25 @@ permalink: /team/
 
 The group is based in the Department of Civil Engineering at Chulalongkorn University.
 
+{% assign faculty = site.data.team_members.items | default: site.data.team_members %}
+{% assign students = site.data.students.items | default: site.data.students %}
+
 ## Faculty
 
 {% assign faculty_count = 0 %}
-{% for member in site.data.team_members %}
+{% for member in faculty %}
   {% include person_flags.html %}
   {% unless is_placeholder %}
     {% assign faculty_count = faculty_count | plus: 1 %}
     <div class="faculty-block">
       <article class="person-row">
         {% if member.photo %}
-          <img class="person-photo" src="{{ '/images/teampic/' | append: member.photo | relative_url }}" alt="{{ member.name }}">
+          {% if member.photo contains "/" %}
+            {% assign photo_src = member.photo %}
+          {% else %}
+            {% assign photo_src = "/images/teampic/" | append: member.photo %}
+          {% endif %}
+          <img class="person-photo" src="{{ photo_src | relative_url }}" alt="{{ member.name }}">
         {% else %}
           <div class="person-fallback" aria-hidden="true">{{ member.name | slice: 0 }}</div>
         {% endif %}
@@ -78,7 +86,7 @@ The group is based in the Department of Civil Engineering at Chulalongkorn Unive
 {% endif %}
 
 {% assign student_count = 0 %}
-{% for member in site.data.students %}
+{% for member in students %}
   {% include person_flags.html %}
   {% unless is_placeholder %}
     {% assign student_count = student_count | plus: 1 %}
@@ -87,7 +95,7 @@ The group is based in the Department of Civil Engineering at Chulalongkorn Unive
 {% if student_count > 0 %}
 ## Students
 <div class="people-strip">
-{% for member in site.data.students %}
+{% for member in students %}
   {% include person_flags.html %}
   {% unless is_placeholder %}
   <article class="person-card">
