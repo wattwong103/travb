@@ -4,29 +4,26 @@ Public website of the Travel Behavior Research Group (TBRG), Department of Civil
 
 Live site: <https://wattwong103.github.io/travb>
 
-## Editing content
+## Editing the site (for the group)
 
-YAML files in `_data` are the source of truth:
+Professors should use the form editor, not these files. See **[EDITING.md](EDITING.md)**.
 
-- `_data/team_members.yml` — faculty
-- `_data/students.yml`, `_data/researchers.yml`, alumni files — other people (placeholder names and emails are hidden in templates)
-- `_data/publist.yml` — publications
-- `_data/news.yml` — news items
+Short version: open <https://wattwong103.github.io/travb/admin/>, log in with GitHub, edit Faculty / Papers / News, save. Invite editors as GitHub collaborators on this repository.
+
+## For developers
+
+YAML in `_data` is still the source of truth (`team_members.yml`, `students.yml`, `publist.yml`, `news.yml`). Each of those files has an `items:` list so the `/admin` forms can edit them.
 
 Pages live in `_pages`. Navigation is Home, Research, People, Publications, News, Data.
 
-## Design
-
-Dark charcoal editorial layout with serif headlines, geometric sans UI, a CSS map-grid, and thin amber accents. Styles are in `css/tbrg.css`. The site does not use Bootstrap for layout.
-
-## Local build
+Dark charcoal editorial layout: `css/tbrg.css`.
 
 ```bash
 bundle install
 bundle exec jekyll serve
 ```
 
-The site is configured as a GitHub Pages project site with `url: https://wattwong103.github.io` and `baseurl: /travb`.
+GitHub Pages project site: `url: https://wattwong103.github.io`, `baseurl: /travb`.
 
 ## License
 

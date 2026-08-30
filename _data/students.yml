@@ -1,5 +1,7 @@
-- name: Mark Bennett
-  email: xxxxxx
-
-- name: Michał Bennett
-  email: xxxxxxx
+# Students. Prefer the /admin editor.
+# Placeholder emails (xxxxx) and last names that are only "X" are hidden on the public site.
+items:
+  - name: Mark Bennett
+    email: xxxxxx
+  - name: Michał Bennett
+    email: xxxxxxx
