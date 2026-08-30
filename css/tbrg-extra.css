@@ -142,3 +142,27 @@
   .slide, .slide-type { grid-template-columns: 1fr; min-height: 0; }
   .post-teaser { grid-template-columns: 1fr; gap: 0.3rem; }
 }
+
+/* People cards: one faculty member should not sit in a 260px auto-fill track */
+.people-strip {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+.person-card,
+.person-row {
+  overflow: hidden;
+}
+
+/* Phone: stack photo above copy so the bio is not a 95px column */
+@media (max-width: 880px) {
+  .faculty-block .person-row,
+  .person-card {
+    grid-template-columns: 1fr;
+  }
+  .person-photo,
+  .person-fallback,
+  .faculty-block .person-photo,
+  .faculty-block .person-fallback {
+    width: 7rem;
+    height: 8.75rem;
+  }
+}
