@@ -1,65 +1,27 @@
 ---
 title: "Publications | Travel Behavior Research Group"
 layout: gridlay
-excerpt: "Publications | Travel Behavior Research Group"
+excerpt: "Selected publications from the Travel Behavior Research Group."
 sitemap: false
 permalink: /publications/
 ---
 
-# Publications
+<p class="page-kicker">Publications</p>
 
-For a full list go to [Google Scholar](https://scholar.google.com/citations?hl=en&user=oLV6IeQAAAAJ).
+# Papers and chapters
 
-<!-- ## Highlights
+For a full list, see <a href="{{ site.scholar_url }}" target="_blank" rel="noopener">Google Scholar</a>. Titles below are drawn from the group’s publication data file.
 
-(For a full list see [below](#full-list) or go to [Google Scholar](https://scholar.google.com/citations?user=I8dpTJMAAAAJ&hl=en).
-
-{% assign number_printed = 0 %}
-{% for publi in site.data.publist %}
-
-{% assign even_odd = number_printed | modulo: 2 %}
-{% if publi.highlight == 1 %}
-
-{% if even_odd == 0 %}
-
-<div class="row">
-{% endif %}
-
-<div class="col-sm-6 clearfix">
- <div class="well">
-  <pubtit>{{ publi.title }}</pubtit>
-  <img src="{{ site.url }}{{ site.baseurl }}/images/pubpic/{{ publi.image }}" class="img-responsive" width="33%" style="float: left" />
-  <p>{{ publi.description }}</p>
-  <p><em>{{ publi.authors }}</em></p>
-  <p><strong><a href="{{ publi.link.url }}">{{ publi.link.display }}</a></strong></p>
-  <p class="text-danger"><strong> {{ publi.news1 }}</strong></p>
-  <p> {{ publi.news2 }}</p>
- </div>
-</div>
-
-{% assign number_printed = number_printed | plus: 1 %}
-
-{% if even_odd == 1 %}
-
-</div>
-{% endif %}
-
-{% endif %}
+<ol class="pub-list">
+{% assign papers = site.data.publist.items | default: site.data.publist %}
+{% for publi in papers %}
+  <li class="pub-item">
+    <h2>{{ publi.title }}</h2>
+    <p class="pub-authors">{{ publi.authors }}</p>
+    {% if publi.description %}<p class="pub-desc">{{ publi.description }}</p>{% endif %}
+    {% if publi.link.url %}
+    <p class="pub-link"><a href="{{ publi.link.url }}" target="_blank" rel="noopener">{{ publi.link.display }}</a></p>
+    {% endif %}
+  </li>
 {% endfor %}
-
-{% assign even_odd = number_printed | modulo: 2 %}
-{% if even_odd == 1 %}
-
-</div>
-{% endif %}
-
-<p> &nbsp; </p>
-
-## Full List -->
-
-{% for publi in site.data.publist %}
-
-{{ publi.title }} <br />
-<em>{{ publi.authors }} </em><br /><a href="{{ publi.link.url }}">{{ publi.link.display }}</a>
-
-{% endfor %}
+</ol>

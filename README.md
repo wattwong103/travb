@@ -1,11 +1,30 @@
-# The CAM Group Website
+# Travel Behavior Research Group
 
-This is the website of our academic research group at the Institute for Manufacturing in the Department of Engineering at the University of Cambridge.
+Public website of the Travel Behavior Research Group (TBRG), Department of Civil Engineering, Faculty of Engineering, Chulalongkorn University.
 
-This website is powered by Jekyll and some Bootstrap, Bootwatch. We tried to make it simple yet adaptable, so that it is easy for you to use it as a template. Plese feel free to copy and modify for your own purposes.
+Live site: <https://wattwong103.github.io/travb>
 
-Thanks to the [Allan Lab](http://www.allanlab.org/) for providing the basis for this site. Source available [here](https://github.com/mpa139/allanlab).
+## Editing the site (for the group)
 
+Professors should use the form editor, not these files. See **[EDITING.md](EDITING.md)**.
 
-Copyright CAM Group. Code released under the MIT License.
+Short version: open <https://wattwong103.github.io/travb/admin/>, log in with GitHub, edit Faculty / Papers / News, save. Invite editors as GitHub collaborators on this repository.
 
+## For developers
+
+YAML in `_data` is still the source of truth (`team_members.yml`, `students.yml`, `publist.yml`, `news.yml`). Each of those files has an `items:` list so the `/admin` forms can edit them.
+
+Pages live in `_pages`. Navigation is Home, Research, People, Publications, News, Data.
+
+Dark charcoal editorial layout: `css/tbrg.css`.
+
+```bash
+bundle install
+bundle exec jekyll serve
+```
+
+GitHub Pages project site: `url: https://wattwong103.github.io`, `baseurl: /travb`.
+
+## License
+
+Site content © 2026 Travel Behavior Research Group. Code is released under the MIT License (see `LICENSE`).

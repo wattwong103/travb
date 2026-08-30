@@ -1,0 +1,74 @@
+backend:
+  name: github
+  repo: wattwong103/travb
+  branch: main
+
+site_url: https://wattwong103.github.io/travb
+display_url: https://wattwong103.github.io/travb
+logo_url: https://wattwong103.github.io/travb/favicon.ico
+
+publish_mode: simple
+locale: en
+
+media_folder: images/teampic
+public_folder: /images/teampic
+
+collections:
+  - name: site_content
+    label: Site content
+    files:
+      - name: faculty
+        label: Faculty
+        file: _data/team_members.yml
+        fields:
+          - name: items
+            label: Faculty members
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Role, name: info, widget: string, required: false, hint: "e.g. Assistant Professor" }
+              - { label: Email, name: email, widget: string, required: false }
+              - { label: Photo, name: photo, widget: image, required: false, media_folder: images/teampic, public_folder: "", choose_url: false }
+              - { label: Bio, name: bio, widget: text, required: false }
+      - name: students
+        label: Students
+        file: _data/students.yml
+        fields:
+          - name: items
+            label: Students
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Role, name: info, widget: string, required: false }
+              - { label: Email, name: email, widget: string, required: false }
+      - name: publications
+        label: Publications
+        file: _data/publist.yml
+        fields:
+          - name: items
+            label: Papers
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Authors, name: authors, widget: string, hint: "e.g. Bunditsakulchai P., Liu C." }
+              - { label: Short description, name: description, widget: text, required: false }
+              - label: Link
+                name: link
+                widget: object
+                fields:
+                  - { label: URL, name: url, widget: string, hint: "DOI or paper link" }
+                  - { label: Link text, name: display, widget: string, hint: "e.g. DOI: 10.1234/..." }
+      - name: news
+        label: News
+        file: _data/news.yml
+        fields:
+          - name: items
+            label: News items
+            widget: list
+            summary: "{{fields.date}} — {{fields.headline}}"
+            fields:
+              - { label: Date, name: date, widget: string, hint: "e.g. 31 Aug 2026" }
+              - { label: Headline, name: headline, widget: text }

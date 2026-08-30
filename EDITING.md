@@ -1,0 +1,48 @@
+# How to update the TBRG website
+
+You do not need to know Git, YAML, or coding. After the new site is published, this is the usual way to change it.
+
+## Before you start
+
+Someone with access to the GitHub repository (`wattwong103/travb`) must invite you as a collaborator once. You will log in with that GitHub account.
+
+## Everyday editing
+
+1. Open [the editor](https://wattwong103.github.io/travb/admin/).
+2. Click **Login with GitHub** and approve access.
+3. Choose **Faculty**, **Students**, **Publications**, or **News**.
+4. Change the fields (or click **Add** for a new person, paper, or news item).
+5. Click **Save** / **Publish**.
+6. Wait one or two minutes, then refresh the public site: https://wattwong103.github.io/travb
+
+### What each section is for
+
+| Section | Use it for |
+|---|---|
+| Faculty | Names, roles, emails, photos, short bios |
+| Students | Student names and emails |
+| Publications | Paper title, authors, short description, DOI/link |
+| News | Date + one headline |
+
+Photos: upload a square-ish portrait. It will show on the People page.
+
+If a name or email looks like a placeholder (`xxxxx`, or a last name that is just `X`), the public site hides that person on purpose.
+
+## If “Login with GitHub” does not work
+
+The editor needs a one-time GitHub login app (OAuth). That is a maintainer job, not something professors should set up. Until it is done, use the backup below.
+
+### Backup: edit in the GitHub website
+
+You must be logged into GitHub. Click a link, then the pencil icon, then **Commit changes**.
+
+- [News](https://github.com/wattwong103/travb/edit/main/_data/news.yml)
+- [Publications](https://github.com/wattwong103/travb/edit/main/_data/publist.yml)
+- [Faculty](https://github.com/wattwong103/travb/edit/main/_data/team_members.yml)
+- [Students](https://github.com/wattwong103/travb/edit/main/_data/students.yml)
+
+Copy an existing block and change the text. Keep the dashes and spacing the same.
+
+## Maintainer note (not for everyday editors)
+
+GitHub backend for Decap CMS needs a GitHub OAuth App plus a tiny auth callback (for example the [Decap GitHub OAuth provider](https://github.com/vencax/netlify-cms-github-oauth-provider) or a Cloudflare Worker). Homepage URL: `https://wattwong103.github.io/travb`. Then set `backend.base_url` in `admin/config.yml` to that callback origin. Professors do not do this step.
