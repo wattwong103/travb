@@ -5,17 +5,14 @@ excerpt: "News from the Travel Behavior Research Group."
 sitemap: false
 permalink: /news/
 ---
-
 <p class="page-kicker">News</p>
-
-# Group news
-
+<h1>Group news</h1>
 <ol class="news-list">
 {% assign news_items = site.data.news.items | default: site.data.news %}
 {% for article in news_items %}
-  <li class="news-item">
-    <time class="news-date">{{ article.date }}</time>
-    <p class="news-headline">{{ article.headline }}</p>
-  </li>
+<li class="news-item">
+<time class="news-date">{{ article.date }}</time>
+<p class="news-headline">{{ article.headline }}</p>
+</li>
 {% endfor %}
 </ol>

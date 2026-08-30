@@ -10,8 +10,8 @@ Someone with access to the GitHub repository (`wattwong103/travb`) must invite y
 
 1. Open [the editor](https://wattwong103.github.io/travb/admin/).
 2. Click **Login with GitHub** and approve access.
-3. Choose **Faculty**, **Students**, **Publications**, or **News**.
-4. Change the fields (or click **Add** for a new person, paper, or news item).
+3. Choose a section (Faculty, Students, Publications, News, Home slides, or Blog posts).
+4. Change the fields (or click **Add** for a new person, paper, news item, slide, or post).
 5. Click **Save** / **Publish**.
 6. Wait one or two minutes, then refresh the public site: https://wattwong103.github.io/travb
 
@@ -23,10 +23,14 @@ Someone with access to the GitHub repository (`wattwong103/travb`) must invite y
 | Students | Student names and emails |
 | Publications | Paper title, authors, short description, DOI/link |
 | News | Date + one headline |
+| Home slides | Homepage banners (image optional; title and caption) |
+| Blog posts | Longer notes. Short announcements stay in News. |
 
 Photos: upload a square-ish portrait. It will show on the People page.
 
 If a name or email looks like a placeholder (`xxxxx`, or a last name that is just `X`), the public site hides that person on purpose.
+
+Home slides: leave the image blank for a type-only banner. Do not reuse leftover Cambridge photos (`materials.jpg`, `printer-fleet.jpg`).
 
 ## If “Login with GitHub” does not work
 
@@ -40,6 +44,8 @@ You must be logged into GitHub. Click a link, then the pencil icon, then **Commi
 - [Publications](https://github.com/wattwong103/travb/edit/main/_data/publist.yml)
 - [Faculty](https://github.com/wattwong103/travb/edit/main/_data/team_members.yml)
 - [Students](https://github.com/wattwong103/travb/edit/main/_data/students.yml)
+- [Home slides](https://github.com/wattwong103/travb/edit/main/_data/slides.yml)
+- [Blog posts](https://github.com/wattwong103/travb/tree/main/_posts)
 
 Copy an existing block and change the text. Keep the dashes and spacing the same.
 
