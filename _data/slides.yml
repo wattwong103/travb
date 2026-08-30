@@ -1,0 +1,15 @@
+# Homepage slides. Prefer the /admin editor (Home slides).
+# image is optional. Skip Cambridge leftover photos (materials.jpg, printer-fleet.jpg).
+items:
+  - image: ""
+    kicker: Bangkok
+    title: How people move through the city
+    caption: Travel choices, every day, shape congestion, access, and what we build next.
+  - image: /images/respic/venn_diagram.png
+    kicker: Research
+    title: Where engineering meets behaviour
+    caption: TBRG works at the overlap of transportation engineering, surveys, and planning.
+  - image: ""
+    kicker: Collaboration
+    title: Highway safety in Thailand
+    caption: Work with HTOC and KMITL, 5 May 2024.

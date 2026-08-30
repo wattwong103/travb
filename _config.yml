@@ -36,7 +36,7 @@ sass:
 markdown: kramdown
 highlighter: rouge
 lsi: false
-excerpt_separator: "\n\n"
+excerpt_separator: "\\n\\n"
 incremental: false
 
 kramdown:
@@ -52,3 +52,10 @@ kramdown:
 
 plugins:
   - jekyll-seo-tag
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post

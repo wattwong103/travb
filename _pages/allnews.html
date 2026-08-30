@@ -1,15 +1,18 @@
-<section class="news-block" aria-labelledby="news-heading">
-<div class="section-head">
-<h2 id="news-heading">News</h2>
-<a href="{{ '/news/' | relative_url }}">All news</a>
-</div>
+---
+title: "News | Travel Behavior Research Group"
+layout: textlay
+excerpt: "News from the Travel Behavior Research Group."
+sitemap: false
+permalink: /news/
+---
+<p class="page-kicker">News</p>
+<h1>Group news</h1>
 <ol class="news-list">
 {% assign news_items = site.data.news.items | default: site.data.news %}
-{% for article in news_items limit:9 %}
+{% for article in news_items %}
 <li class="news-item">
 <time class="news-date">{{ article.date }}</time>
 <p class="news-headline">{{ article.headline }}</p>
 </li>
 {% endfor %}
 </ol>
-</section>
