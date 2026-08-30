@@ -11,7 +11,8 @@ permalink: /news/
 # Group news
 
 <ol class="news-list">
-{% for article in site.data.news %}
+{% assign news_items = site.data.news.items | default: site.data.news %}
+{% for article in news_items %}
   <li class="news-item">
     <time class="news-date">{{ article.date }}</time>
     <p class="news-headline">{{ article.headline }}</p>

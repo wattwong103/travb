@@ -13,7 +13,8 @@ permalink: /publications/
 For a full list, see <a href="{{ site.scholar_url }}" target="_blank" rel="noopener">Google Scholar</a>. Titles below are drawn from the group’s publication data file.
 
 <ol class="pub-list">
-{% for publi in site.data.publist %}
+{% assign papers = site.data.publist.items | default: site.data.publist %}
+{% for publi in papers %}
   <li class="pub-item">
     <h2>{{ publi.title }}</h2>
     <p class="pub-authors">{{ publi.authors }}</p>
