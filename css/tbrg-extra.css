@@ -71,7 +71,7 @@ main:has(.access-page) { padding-top: 0; }
   color: var(--ink-soft);
   border: 1px solid var(--line);
   padding: 0.9rem 1rem 1rem;
-  max-width: 16.5rem;
+  max-width: 17.5rem;
   backdrop-filter: blur(10px);
 }
 .access-panel fieldset {
@@ -117,7 +117,8 @@ main:has(.access-page) { padding-top: 0; }
   border: 1px solid rgba(255,255,255,0.25);
 }
 .swatch-w { background: #f7f4ef; }
-.swatch-o { background: #e8923a; }
+.swatch-g { background: #f3c07a; }
+.swatch-o { background: #e07a3d; }
 .swatch-r { background: #d4564c; }
 .access-meta { font-size: 0.78rem; color: var(--muted); margin: 0 0 0.8rem; }
 .access-panel .btn { font-size: 0.68rem; padding: 0.5rem 0.7rem; }

@@ -20,12 +20,16 @@
   ).addTo(map);
 
   var view = "combined";
-  var classesLayer, khetLayer, railLayer, stationsLayer, isoLayer, studyLayer;
+  var speed = "40";
+  var useAll = false;
+  var classLayers = {};
+  var classesLayer, khetLayer, railLayer, stationsLayer, feedersLayer, isoLayer, studyLayer;
 
   function classStyle(feature) {
     var klass = feature.properties && feature.properties.class;
     if (view === "gaps10") {
-      if (klass === "<10") return { fillOpacity: 0, stroke: false };
+      if (klass === "<5" || klass === "5-10" || klass === "<10")
+        return { fillOpacity: 0, stroke: false };
       return { color: "#d4564c", fillColor: "#d4564c", fillOpacity: 0.45, weight: 0 };
     }
     if (view === "gaps15") {
@@ -33,15 +37,39 @@
         return { color: "#d4564c", fillColor: "#d4564c", fillOpacity: 0.45, weight: 0 };
       return { fillOpacity: 0, stroke: false };
     }
-    if (klass === "<10")
-      return { color: "#f7f4ef", fillColor: "#f7f4ef", fillOpacity: 0.12, weight: 0 };
+    if (klass === "<5" || klass === "<10")
+      return { color: "#f7f4ef", fillColor: "#f7f4ef", fillOpacity: 0.1, weight: 0 };
+    if (klass === "5-10")
+      return { color: "#f3c07a", fillColor: "#f3c07a", fillOpacity: 0.42, weight: 0 };
     if (klass === "10-15")
-      return { color: "#e8923a", fillColor: "#e8923a", fillOpacity: 0.48, weight: 0 };
+      return { color: "#e07a3d", fillColor: "#e07a3d", fillOpacity: 0.5, weight: 0 };
     return { color: "#d4564c", fillColor: "#d4564c", fillOpacity: 0.45, weight: 0 };
   }
 
-  function restyle() {
-    if (classesLayer) classesLayer.setStyle(classStyle);
+  function fileFor() {
+    var prefix = useAll ? "classes_all_" : "classes_";
+    return prefix + speed + ".geojson";
+  }
+
+  function showClasses(data) {
+    if (classesLayer) map.removeLayer(classesLayer);
+    classesLayer = L.geoJSON(data, { style: classStyle, interactive: false }).addTo(map);
+  }
+
+  function switchLayer() {
+    var name = fileFor();
+    if (classLayers[name]) {
+      showClasses(classLayers[name]);
+      return;
+    }
+    loadJSON(name)
+      .then(function (data) {
+        classLayers[name] = data;
+        showClasses(data);
+      })
+      .catch(function () {
+        if (classLayers["classes.geojson"]) showClasses(classLayers["classes.geojson"]);
+      });
   }
 
   function loadJSON(name) {
@@ -52,12 +80,13 @@
   }
 
   Promise.all([
-    loadJSON("classes.geojson"),
+    loadJSON("classes_40.geojson").catch(function () { return loadJSON("classes.geojson"); }),
     loadJSON("khet.geojson"),
     loadJSON("rail.geojson"),
     loadJSON("stations.geojson"),
     loadJSON("study.geojson").catch(function () { return null; }),
-    loadJSON("meta.json").catch(function () { return null; })
+    loadJSON("meta.json").catch(function () { return null; }),
+    loadJSON("feeders.geojson").catch(function () { return null; })
   ])
     .then(function (pack) {
       var classes = pack[0];
@@ -66,8 +95,11 @@
       var stations = pack[3];
       var study = pack[4];
       var meta = pack[5];
+      var feeders = pack[6];
 
-      classesLayer = L.geoJSON(classes, { style: classStyle, interactive: false }).addTo(map);
+      classLayers["classes_40.geojson"] = classes;
+      classLayers["classes.geojson"] = classes;
+      showClasses(classes);
 
       if (study) {
         studyLayer = L.geoJSON(study, {
@@ -97,10 +129,10 @@
               style: function (f) {
                 var band = f.properties && f.properties.band;
                 return {
-                  color: band === "10" ? "#888" : "#e8923a",
+                  color: band === "10" ? "#888" : "#e07a3d",
                   weight: 1.2,
                   fillOpacity: 0.15,
-                  fillColor: band === "10" ? "#fff" : "#e8923a",
+                  fillColor: band === "10" ? "#fff" : "#e07a3d",
                   opacity: 0
                 };
               }
@@ -148,26 +180,47 @@
         }
       }).addTo(map);
 
+      if (feeders) {
+        feedersLayer = L.geoJSON(feeders, {
+          pointToLayer: function (feature, latlng) {
+            var kind = feature.properties && feature.properties.kind;
+            var boat = kind === "boat";
+            return L.circleMarker(latlng, {
+              radius: 4,
+              color: boat ? "#1d4e89" : "#2c6e49",
+              fillColor: boat ? "#1d4e89" : "#2c6e49",
+              fillOpacity: 0.95,
+              weight: 1
+            });
+          },
+          onEachFeature: function (feature, layer) {
+            var p = feature.properties || {};
+            var label = p.kind === "brt" ? "BRT" : "Boat pier";
+            layer.bindPopup("<strong>" + (p.name || label) + "</strong><br>" + label);
+          }
+        });
+      }
+
       var bounds = classesLayer.getBounds();
       if (bounds.isValid()) {
         var wide = window.innerWidth > 720;
         map.fitBounds(bounds, {
-          paddingTopLeft: [wide ? 280 : 16, 16],
+          paddingTopLeft: [wide ? 300 : 16, 16],
           paddingBottomRight: [16, 16]
         });
       }
       var loading = el.querySelector(".access-loading");
       if (loading) loading.remove();
 
-      if (meta) {
+      function updateMeta() {
         var box = document.getElementById("access-meta");
-        if (box) {
-          var speed = meta.walk_speed_kmh != null ? meta.walk_speed_kmh : 4.5;
-          var n = meta.n_stations != null ? meta.n_stations + " stations" : "";
-          var pulled = meta.osm_pulled ? " · OSM " + meta.osm_pulled : "";
-          box.textContent = speed + " km/h · " + n + pulled;
-        }
+        if (!box) return;
+        var sp = speed === "36" ? "3.6" : speed === "45" ? "4.5" : "4.0";
+        var extra = useAll ? " · rail + boats" : " · urban rail";
+        var n = meta && meta.n_stations != null ? meta.n_stations + " stations" : "";
+        box.textContent = sp + " km/h" + extra + (n ? " · " + n : "");
       }
+      updateMeta();
     })
     .catch(function (err) {
       el.innerHTML =
@@ -178,9 +231,37 @@
   document.querySelectorAll('input[name="access-view"]').forEach(function (input) {
     input.addEventListener("change", function () {
       view = input.value;
-      restyle();
+      if (classesLayer) classesLayer.setStyle(classStyle);
     });
   });
+  document.querySelectorAll('input[name="access-speed"]').forEach(function (input) {
+    input.addEventListener("change", function () {
+      speed = input.value;
+      switchLayer();
+      var box = document.getElementById("access-meta");
+      if (box) {
+        var sp = speed === "36" ? "3.6" : speed === "45" ? "4.5" : "4.0";
+        var extra = useAll ? " · rail + boats" : " · urban rail";
+        box.textContent = sp + " km/h" + extra;
+      }
+    });
+  });
+  var allBox = document.getElementById("tog-all");
+  if (allBox) {
+    allBox.addEventListener("change", function () {
+      useAll = allBox.checked;
+      switchLayer();
+      if (feedersLayer) {
+        if (useAll) feedersLayer.addTo(map);
+        else map.removeLayer(feedersLayer);
+      }
+      var box = document.getElementById("access-meta");
+      if (box) {
+        var sp = speed === "36" ? "3.6" : speed === "45" ? "4.5" : "4.0";
+        box.textContent = sp + " km/h · " + (useAll ? "rail + boats" : "urban rail");
+      }
+    });
+  }
 
   document.getElementById("tog-khet").addEventListener("change", function () {
     if (!khetLayer) return;

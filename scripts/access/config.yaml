@@ -1,11 +1,13 @@
 # Walk-isochrone pipeline for TBRG /access/
 # Distances follow network length at walk_speed_kmh.
 
-walk_speed_kmh: 4.5
-cutoffs_min: [10, 15]
+# 4.0 km/h ≈ 1.11 m/s — typical urban walk in heat (not realtor 5 km/h).
+walk_speed_kmh: 4.0
+walk_speeds_kmh: [3.6, 4.0, 4.5]
+cutoffs_min: [5, 10, 15]
 edge_buffer_m: 40
 simplify_m: 25
-graph_buffer_m: 1400
+graph_buffer_m: 1600
 crs_metric: EPSG:32647
 
 # west, south, east, north — BMA + northern BTS / Red Line / ARL
@@ -48,7 +50,6 @@ lines:
     - สายสุขุมวิท
     - สายสีลม
   deny:
-    - BRT
     - Orange
     - สีส้ม
     - ferry

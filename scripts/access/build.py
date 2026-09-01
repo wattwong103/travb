@@ -30,8 +30,9 @@ ROOT = Path(__file__).resolve().parents[2]
 LOG = logging.getLogger("access")
 
 CLASS_COLORS = {
-    "<10": "#f7f4ef",
-    "10-15": "#e8923a",
+    "<5": "#f7f4ef",
+    "5-10": "#f3c07a",
+    "10-15": "#e07a3d",
     ">15": "#d4564c",
 }
 
@@ -59,6 +60,7 @@ def cache_paths(cfg: dict) -> dict:
         "graph": cache / "walk.pkl",
         "classes": cache / "classes.geojson",
         "station_iso": cache / "station_iso.geojson",
+        "feeders": cache / "feeders.geojson",
     }
 
 
@@ -171,6 +173,8 @@ def elements_to_gdf(elements: list) -> gpd.GeoDataFrame:
         geom = None
         if el.get("type") == "node" and "lat" in el:
             geom = Point(el["lon"], el["lat"])
+        elif "center" in el:
+            geom = Point(el["center"]["lon"], el["center"]["lat"])
         elif "geometry" in el:
             coords = [(p["lon"], p["lat"]) for p in el["geometry"]]
             if len(coords) >= 2:
@@ -469,6 +473,73 @@ def fetch_rail(cfg, paths, allow, deny, fresh: bool):
     return stations, exits, rail_lines
 
 
+def fetch_feeders(cfg, paths, fresh: bool) -> gpd.GeoDataFrame:
+    """BRT stops and river/canal boat piers — extra first-mile access."""
+    if not fresh and paths["feeders"].exists():
+        LOG.info("feeders: cache")
+        return read_gdf(paths["feeders"])
+
+    west, south, east, north = cfg["bbox"]
+    bb = f"({south},{west},{north},{east})"
+    LOG.info("feeders: Overpass BRT + ferry piers")
+    els = overpass_elements(
+        f"[out:json][timeout:90];("
+        f'node["amenity"="ferry_terminal"]{bb};'
+        f'way["amenity"="ferry_terminal"]{bb};'
+        f'node["ferry"="yes"]{bb};'
+        f'node["highway"="bus_stop"]["name"~"BRT|บีอาร์ที",i]{bb};'
+        f'node["public_transport"~"platform|station|stop_position"]["name"~"BRT|บีอาร์ที",i]{bb};'
+        f'node["name"~"Bangkok BRT"]{bb};'
+        f");out center;"
+    )
+    gdf = elements_to_gdf(els)
+    if gdf.empty:
+        LOG.warning("feeders: none found")
+        empty = gpd.GeoDataFrame(
+            {"name": pd.Series(dtype=str), "kind": pd.Series(dtype=str)},
+            geometry=[],
+            crs="EPSG:4326",
+        )
+        save_gdf(empty, paths["feeders"])
+        return empty
+
+    def kind(row):
+        blob_t = blob(row).lower()
+        amenity = str(row.get("amenity") or "")
+        if "brt" in blob_t or "บีอาร์ที" in blob_t:
+            return "brt"
+        if amenity == "ferry_terminal" or "ferry" in blob_t or "pier" in blob_t or "ท่าเรือ" in blob_t:
+            return "boat"
+        if str(row.get("ferry") or "") == "yes":
+            return "boat"
+        return "boat" if "ท่า" in blob_t else "brt"
+
+    gdf = gdf_points(gdf)
+    gdf["kind"] = gdf.apply(kind, axis=1)
+    gdf["name"] = gdf.apply(
+        lambda r: r.get("name:en")
+        if pd.notna(r.get("name:en"))
+        else (r.get("name") if pd.notna(r.get("name")) else r["kind"]),
+        axis=1,
+    )
+    # Dedup within 40 m
+    m = gdf.to_crs(cfg["crs_metric"])
+    xy = np.c_[m.geometry.x, m.geometry.y]
+    keep, used = [], set()
+    for i in range(len(m)):
+        if i in used:
+            continue
+        d = np.hypot(xy[:, 0] - xy[i, 0], xy[:, 1] - xy[i, 1])
+        used.update(np.where(d < 40)[0].tolist())
+        keep.append(i)
+    gdf = gdf.iloc[keep].reset_index(drop=True)
+    keep_cols = [c for c in ("name", "kind", "geometry") if c in gdf.columns]
+    gdf = gdf[keep_cols]
+    save_gdf(gdf, paths["feeders"])
+    LOG.info("feeders: %s (%s)", len(gdf), gdf["kind"].value_counts().to_dict() if len(gdf) else {})
+    return gdf
+
+
 def _line_label(text: str, allow) -> str:
     labels = [
         ("Gold", "BTS Gold"),
@@ -648,6 +719,54 @@ def _edge_polygon(G, node_ids, buffer_m, crs_metric) -> object:
     return make_valid(geom)
 
 
+def _feat_poly(geom, simplify_m):
+    geom = make_valid(geom).simplify(simplify_m)
+    if geom.is_empty:
+        return None
+    if geom.geom_type == "GeometryCollection":
+        bits = [g for g in geom.geoms if g.geom_type in ("Polygon", "MultiPolygon")]
+        geom = unary_union(bits) if bits else Polygon()
+    return None if geom.is_empty else geom
+
+
+def classes_from_origins(cfg, G, origins, study, speed_kmh: float) -> gpd.GeoDataFrame:
+    """4-class walk isochrones: <5, 5–10, 10–15, >15 minutes."""
+    m_per_min = float(speed_kmh) * 1000 / 60.0
+    d5, d10, d15 = m_per_min * 5, m_per_min * 10, m_per_min * 15
+    xs = origins.geometry.x.to_numpy()
+    ys = origins.geometry.y.to_numpy()
+    nn = _nearest_nodes(G, xs, ys)
+    dist = nx.multi_source_dijkstra_path_length(G, set(nn), cutoff=d15, weight="length")
+    n5 = [n for n, d in dist.items() if d <= d5]
+    n10 = [n for n, d in dist.items() if d <= d10]
+    n15 = list(dist.keys())
+    LOG.info(
+        "isochrones %.1f km/h: %s / %s / %s nodes at 5 / 10 / 15 min",
+        speed_kmh, len(n5), len(n10), len(n15),
+    )
+    buf = cfg["edge_buffer_m"]
+    crs = cfg["crs_metric"]
+    p5 = _edge_polygon(G, n5, buf, crs)
+    p10 = _edge_polygon(G, n10, buf, crs)
+    p15 = _edge_polygon(G, n15, buf, crs)
+    study_m = make_valid(study.to_crs(crs).union_all())
+    p5 = make_valid(p5).intersection(study_m)
+    p10 = make_valid(p10).intersection(study_m)
+    p15 = make_valid(p15).intersection(study_m)
+    bands = (
+        ("<5", p5),
+        ("5-10", make_valid(p10.difference(p5))),
+        ("10-15", make_valid(p15.difference(p10))),
+        (">15", make_valid(study_m.difference(p15))),
+    )
+    rows = []
+    for klass, geom in bands:
+        g = _feat_poly(geom, cfg["simplify_m"])
+        if g is not None:
+            rows.append({"class": klass, "speed_kmh": speed_kmh, "geometry": g})
+    return gpd.GeoDataFrame(rows, crs=crs).to_crs(4326)
+
+
 def compute_isochrones(cfg, paths, G, exits, stations, study, fresh: bool):
     if not fresh and paths["classes"].exists():
         LOG.info("isochrones: cache")
@@ -655,86 +774,39 @@ def compute_isochrones(cfg, paths, G, exits, stations, study, fresh: bool):
             read_gdf(paths["station_iso"]) if paths["station_iso"].exists() else None
         )
 
-    speed = float(cfg["walk_speed_kmh"]) * 1000 / 60.0  # m per minute
-    d10 = speed * min(cfg["cutoffs_min"])
-    d15 = speed * max(cfg["cutoffs_min"])
-    LOG.info("isochrones: %.1f km/h → 10 min = %.0f m, 15 min = %.0f m", cfg["walk_speed_kmh"], d10, d15)
-
-    Gu = G
-    xs = exits.geometry.x.to_numpy()
-    ys = exits.geometry.y.to_numpy()
-    nn = _nearest_nodes(Gu, xs, ys)
-    exits = exits.copy()
-    exits["node"] = nn
-
-    dist = nx.multi_source_dijkstra_path_length(
-        Gu, set(nn), cutoff=d15, weight="length"
-    )
-    nodes10 = [n for n, d in dist.items() if d <= d10]
-    nodes15 = list(dist.keys())
-    LOG.info("isochrones: %s nodes in 10 min, %s in 15 min", len(nodes10), len(nodes15))
-
-    poly10 = _edge_polygon(Gu, nodes10, cfg["edge_buffer_m"], cfg["crs_metric"])
-    poly15 = _edge_polygon(Gu, nodes15, cfg["edge_buffer_m"], cfg["crs_metric"])
-    study_m = make_valid(study.to_crs(cfg["crs_metric"]).union_all())
-    poly10 = make_valid(poly10).intersection(study_m)
-    poly15 = make_valid(poly15).intersection(study_m)
-    white = poly10
-    orange = make_valid(poly15.difference(poly10))
-    red = make_valid(study_m.difference(poly15))
-
-    def feat(geom, klass):
-        geom = make_valid(geom).simplify(cfg["simplify_m"])
-        if geom.is_empty:
-            return None
-        if geom.geom_type == "GeometryCollection":
-            bits = [g for g in geom.geoms if g.geom_type in ("Polygon", "MultiPolygon")]
-            geom = unary_union(bits) if bits else Polygon()
-        return geom
-
-    rows = []
-    for klass, geom in (("<10", white), ("10-15", orange), (">15", red)):
-        g = feat(geom, klass)
-        if g is None or g.is_empty:
-            continue
-        rows.append({"class": klass, "geometry": g})
-    classes = gpd.GeoDataFrame(rows, crs=cfg["crs_metric"]).to_crs(4326)
+    speed = float(cfg["walk_speed_kmh"])
+    classes = classes_from_origins(cfg, G, exits, study, speed)
     save_gdf(classes, paths["classes"])
 
-    # Per-station 15-min polygons, simplified, for click inspect
+    if paths["station_iso"].exists():
+        LOG.info("station iso: keep existing")
+        return classes, read_gdf(paths["station_iso"])
+
+    # Per-station 15-min polygons at the default speed, for click inspect
+    m_per_min = speed * 1000 / 60.0
+    d10, d15 = m_per_min * 10, m_per_min * 15
+    xs = exits.geometry.x.to_numpy()
+    ys = exits.geometry.y.to_numpy()
+    nn = _nearest_nodes(G, xs, ys)
+    exits = exits.copy()
+    exits["node"] = nn
     iso_rows = []
     by_sta = exits.groupby("station")
     for name, grp in by_sta:
         sources = set(grp["node"].tolist())
-        d = nx.multi_source_dijkstra_path_length(
-            Gu, sources, cutoff=d15, weight="length"
-        )
+        d = nx.multi_source_dijkstra_path_length(G, sources, cutoff=d15, weight="length")
         n10 = [n for n, dd in d.items() if dd <= d10]
         n15 = list(d.keys())
-        p10 = feat(_edge_polygon(Gu, n10, cfg["edge_buffer_m"], cfg["crs_metric"]), "<10")
-        p15 = feat(_edge_polygon(Gu, n15, cfg["edge_buffer_m"], cfg["crs_metric"]), "15")
-        line = grp["line"].iloc[0]
-        if p15 is not None and not p15.is_empty:
-            iso_rows.append(
-                {
-                    "station": name,
-                    "line": line,
-                    "band": "15",
-                    "geometry": p15,
-                }
-            )
-        if p10 is not None and not p10.is_empty:
-            iso_rows.append(
-                {
-                    "station": name,
-                    "line": line,
-                    "band": "10",
-                    "geometry": p10,
-                }
-            )
+        p10 = _feat_poly(_edge_polygon(G, n10, cfg["edge_buffer_m"], cfg["crs_metric"]), cfg["simplify_m"])
+        p15 = _feat_poly(_edge_polygon(G, n15, cfg["edge_buffer_m"], cfg["crs_metric"]), cfg["simplify_m"])
+        line = grp["line"].iloc[0] if "line" in grp.columns else ""
+        if p15 is not None:
+            iso_rows.append({"station": name, "line": line, "band": "15", "geometry": p15})
+        if p10 is not None:
+            iso_rows.append({"station": name, "line": line, "band": "10", "geometry": p10})
     station_iso = gpd.GeoDataFrame(iso_rows, crs=cfg["crs_metric"]).to_crs(4326)
     save_gdf(station_iso, paths["station_iso"])
-    LOG.info("isochrones: wrote 3-class + %s station bands", len(station_iso))
+    LOG.info("isochrones: default %.1f km/h + %s station bands", speed, len(station_iso))
     return classes, station_iso
 
 
@@ -744,7 +816,24 @@ def _to_wgs_simple(gdf: gpd.GeoDataFrame, simplify_deg=0.00015) -> gpd.GeoDataFr
     return out
 
 
-def export_site(cfg, paths, classes, stations, rail, khet, study, station_iso):
+def minify_geojson(path: Path, ndigits=5):
+    def rnd(obj):
+        if isinstance(obj, float):
+            return round(obj, ndigits)
+        if isinstance(obj, list):
+            if obj and isinstance(obj[0], (int, float)):
+                return [round(float(x), ndigits) for x in obj]
+            return [rnd(x) for x in obj]
+        if isinstance(obj, dict):
+            return {k: rnd(v) for k, v in obj.items()}
+        return obj
+
+    data = json.loads(path.read_text())
+    path.write_text(json.dumps(rnd(data), separators=(",", ":")))
+
+
+def export_site(cfg, paths, classes, stations, rail, khet, study, station_iso, extra=None):
+    extra = extra or {}
     out = paths["out"]
     LOG.info("export: %s", out)
 
@@ -775,22 +864,47 @@ def export_site(cfg, paths, classes, stations, rail, khet, study, station_iso):
     if station_iso is not None and not station_iso.empty:
         save_gdf(_to_wgs_simple(station_iso, 0.00025), out / "station_iso.geojson")
 
+    feeders = extra.get("feeders")
+    if feeders is not None and not feeders.empty:
+        save_gdf(feeders, out / "feeders.geojson")
+
+    for key, gdf in extra.get("classes", {}).items():
+        dest = out / f"classes_{key}.geojson"
+        save_gdf(_to_wgs_simple(gdf), dest)
+
+    n_feed = int(len(feeders)) if feeders is not None else 0
     meta = {
         "walk_speed_kmh": cfg["walk_speed_kmh"],
+        "walk_speeds_kmh": cfg.get("walk_speeds_kmh", [cfg["walk_speed_kmh"]]),
         "cutoffs_min": cfg["cutoffs_min"],
         "edge_buffer_m": cfg["edge_buffer_m"],
         "n_stations": int(len(stations)),
         "n_exits": int(stations["exits"].sum()) if "exits" in stations.columns else int(len(stations)),
+        "n_feeders": n_feed,
         "osm_pulled": date.today().isoformat(),
         "crs": "EPSG:4326",
         "study": "BMA 50 districts plus adjacent station districts in Nonthaburi, Samut Prakan, Pathum Thani",
         "lines": "BTS Sukhumvit/Silom/Gold, MRT Blue/Purple/Yellow/Pink, ARL, SRT Dark Red/Light Red",
+        "also": "Chao Phraya and canal boat piers as optional origins",
+        "speed_note": "4.0 km/h is a typical urban walk in heat; 3.6 slower, 4.5 brisk. Not realtor 5 km/h.",
     }
     (out / "meta.json").write_text(json.dumps(meta, indent=2))
-    render_png(cfg, out, classes, khet, rail, stations, study)
+    render_png(cfg, out, classes, khet, rail, stations, study, None)
+    for p in out.glob("*.geojson"):
+        minify_geojson(p)
+    jpg = out / "access-16x9.jpg"
+    png = out / "access-16x9.png"
+    if png.exists():
+        try:
+            from PIL import Image
+
+            im = Image.open(png).convert("RGB")
+            im.save(jpg, format="JPEG", quality=82, optimize=True, progressive=True)
+        except Exception as exc:
+            LOG.warning("jpeg skipped: %s", exc)
 
 
-def render_png(cfg, out: Path, classes, khet, rail, stations, study):
+def render_png(cfg, out: Path, classes, khet, rail, stations, study, feeders=None):
     LOG.info("export: 16:9 PNG")
     metric = cfg["crs_metric"]
     fig, ax = plt.subplots(figsize=(16, 9), dpi=120, facecolor="#f4efe6")
@@ -828,12 +942,13 @@ def render_png(cfg, out: Path, classes, khet, rail, stations, study):
     except Exception as exc:
         LOG.warning("basemap skipped: %s", exc)
 
-    order = {">15": 0, "10-15": 1, "<10": 2}
+    order = {">15": 0, "10-15": 1, "5-10": 2, "<5": 3, "<10": 3}
+    alpha_for = {"<5": 0.08, "5-10": 0.42, "10-15": 0.50, ">15": 0.48, "<10": 0.08}
     cls_m = cls_m.copy()
-    cls_m["_o"] = cls_m["class"].map(order)
+    cls_m["_o"] = cls_m["class"].map(order).fillna(1)
     for _, row in cls_m.sort_values("_o").iterrows():
-        color = CLASS_COLORS[row["class"]]
-        alpha = 0.08 if row["class"] == "<10" else 0.50
+        color = CLASS_COLORS.get(row["class"], "#e8923a")
+        alpha = alpha_for.get(row["class"], 0.45)
         gpd.GeoSeries([row.geometry], crs=metric).plot(
             ax=ax, facecolor=color, edgecolor="none", alpha=alpha, zorder=2
         )
@@ -845,6 +960,14 @@ def render_png(cfg, out: Path, classes, khet, rail, stations, study):
     stations.to_crs(metric).plot(
         ax=ax, color="#1a1a1a", markersize=6, zorder=6, marker="o"
     )
+    if feeders is not None and not feeders.empty:
+        fm = feeders.to_crs(metric)
+        brt = fm[fm["kind"] == "brt"] if "kind" in fm.columns else fm.iloc[0:0]
+        boat = fm[fm["kind"] == "boat"] if "kind" in fm.columns else fm.iloc[0:0]
+        if len(brt):
+            brt.plot(ax=ax, color="#2c6e49", markersize=10, zorder=7, marker="s")
+        if len(boat):
+            boat.plot(ax=ax, color="#1d4e89", markersize=10, zorder=7, marker="D")
 
     ax.set_xticks([])
     ax.set_yticks([])
@@ -865,7 +988,7 @@ def render_png(cfg, out: Path, classes, khet, rail, stations, study):
     ax.text(
         0.01,
         0.925,
-        "Bangkok  ·  minutes to nearest station exit  ·  4.5 km/h on OSM walk graph",
+        "Bangkok  ·  minutes to nearest station exit  ·  typical walk 4.0 km/h (OSM)",
         transform=ax.transAxes,
         fontsize=8,
         color="#444",
@@ -873,7 +996,12 @@ def render_png(cfg, out: Path, classes, khet, rail, stations, study):
     )
     legend_y = 0.14
     for i, (label, color) in enumerate(
-        [("< 10 min", CLASS_COLORS["<10"]), ("10–15 min", CLASS_COLORS["10-15"]), ("> 15 min", CLASS_COLORS[">15"])]
+        [
+            ("< 5 min", CLASS_COLORS["<5"]),
+            ("5–10 min", CLASS_COLORS["5-10"]),
+            ("10–15 min", CLASS_COLORS["10-15"]),
+            ("> 15 min", CLASS_COLORS[">15"]),
+        ]
     ):
         ax.add_patch(
             plt.Rectangle(
@@ -961,11 +1089,65 @@ def main():
         paths["khet"],
     )
 
+    feeders = fetch_feeders(cfg, paths, args.fresh)
     G = fetch_graph(cfg, paths, exits, args.fresh)
-    classes, station_iso = compute_isochrones(
-        cfg, paths, G, exits, stations, study, args.fresh
+
+    # Clip the walk graph to origins so 6 isochrone runs stay tractable.
+    all_pts = pd.concat(
+        [exits[["geometry"]], feeders[["geometry"]]] if not feeders.empty else [exits[["geometry"]]],
+        ignore_index=True,
     )
-    export_site(cfg, paths, classes, stations, rail, khet_kept, study, station_iso)
+    all_pts = gpd.GeoDataFrame(all_pts, crs=exits.crs)
+    if G.number_of_nodes() > 250_000:
+        LOG.info("clipping walk graph (%s nodes) to feeder buffers", G.number_of_nodes())
+        nodes = np.array(list(G.nodes()), dtype=float)
+        k = np.cos(np.radians(13.75))
+        nxy = np.c_[nodes[:, 0] * 111000 * k, nodes[:, 1] * 111000]
+        exy = np.c_[
+            all_pts.geometry.x.to_numpy() * 111000 * k,
+            all_pts.geometry.y.to_numpy() * 111000,
+        ]
+        from scipy.spatial import cKDTree
+
+        tree = cKDTree(nxy)
+        keep_idx = set()
+        radius = float(cfg["graph_buffer_m"]) + 80
+        for p in exy:
+            keep_idx.update(tree.query_ball_point(p, radius))
+        keep_nodes = [tuple(nodes[i]) for i in keep_idx]
+        G = G.subgraph(keep_nodes).copy()
+        LOG.info("clipped graph: %s nodes", G.number_of_nodes())
+
+    default_speed = float(cfg["walk_speed_kmh"])
+    classes, station_iso = compute_isochrones(
+        cfg, paths, G, exits, stations, study, True
+    )
+
+    speeds = cfg.get("walk_speeds_kmh") or [default_speed]
+    extra_classes = {}
+    if feeders is not None and not feeders.empty:
+        all_origins = gpd.GeoDataFrame(
+            pd.concat([exits[["geometry"]], feeders[["geometry"]]], ignore_index=True),
+            crs=exits.crs,
+        )
+    else:
+        all_origins = exits
+    for sp in speeds:
+        key = str(sp).replace(".", "")
+        extra_classes[key] = classes_from_origins(cfg, G, exits, study, float(sp))
+        extra_classes[f"all_{key}"] = classes_from_origins(cfg, G, all_origins, study, float(sp))
+
+    export_site(
+        cfg,
+        paths,
+        extra_classes.get("40", classes),
+        stations,
+        rail,
+        khet_kept,
+        study,
+        station_iso,
+        extra={"feeders": feeders, "classes": extra_classes},
+    )
     LOG.info("done")
 
 

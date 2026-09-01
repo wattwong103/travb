@@ -8,7 +8,7 @@ scripts/access/.venv/bin/pip install -r scripts/access/requirements.txt
 scripts/access/.venv/bin/python scripts/access/build.py
 ```
 
-Walk speed defaults to 4.5 km/h in `config.yaml`. Change it there and re-run; the GitHub Pages site cannot recompute live.
+Walk speed defaults to **4.0 km/h** (typical urban walk in heat). `config.yaml` also precomputes 3.6 (slower) and 4.5 (brisk). The map UI switches those layers; GitHub Pages cannot recompute live.
 
 `--fresh` ignores `scripts/access/cache/` and re-downloads OSM.
 
