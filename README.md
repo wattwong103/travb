@@ -14,7 +14,9 @@ Short version: open <https://wattwong103.github.io/travb/admin/>, log in with Gi
 
 YAML in `_data` is still the source of truth (`team_members.yml`, `students.yml`, `publist.yml`, `news.yml`). Each of those files has an `items:` list so the `/admin` forms can edit them.
 
-Pages live in `_pages`. Navigation is Home, Research, People, Publications, News, Data.
+Pages live in `_pages`. Navigation is Home, Access, Research, People, Publications, News, Data.
+
+The Access map is built offline by `scripts/access/build.py` (not Jekyll). Outputs land in `access-data/`.
 
 Dark charcoal editorial layout: `css/tbrg.css`.
 

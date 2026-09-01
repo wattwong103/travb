@@ -53,6 +53,7 @@ collections:
             summary: "{{fields.title}}"
             fields:
               - { label: Title, name: title, widget: string }
+              - { label: Theme, name: theme, widget: select, options: ["Transport", "Environment and food", "Economy"], required: false }
               - { label: Authors, name: authors, widget: string, hint: "e.g. Bunditsakulchai P., Liu C." }
               - { label: Short description, name: description, widget: text, required: false }
               - label: Link

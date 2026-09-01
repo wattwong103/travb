@@ -2,7 +2,6 @@
 title: "People | Travel Behavior Research Group"
 layout: gridlay
 excerpt: "Faculty and researchers of the Travel Behavior Research Group."
-sitemap: false
 permalink: /team/
 ---
 <p class="page-kicker">People</p>
@@ -68,8 +67,8 @@ permalink: /team/
 {% assign student_count = student_count | plus: 1 %}
 {% endunless %}
 {% endfor %}
-{% if student_count > 0 %}
 <h2>Students</h2>
+{% if student_count > 0 %}
 <div class="people-strip">
 {% for member in students %}
 {% include person_flags.html %}
@@ -84,4 +83,6 @@ permalink: /team/
 {% endunless %}
 {% endfor %}
 </div>
+{% else %}
+<p class="empty-note">Students are listed here as they join the group.</p>
 {% endif %}

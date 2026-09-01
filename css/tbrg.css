@@ -389,9 +389,12 @@ main { flex: 1 0 auto; padding: 2.5rem 0 5rem; }
   padding: 1.35rem 0 1.4rem;
   border-bottom: 1px solid var(--line);
 }
-.pub-item h2 {
+.pub-item h2,
+.pub-item h3 {
   font-size: 1.28rem;
   margin: 0 0 0.35rem;
+  font-family: var(--serif);
+  font-weight: 500;
 }
 .pub-authors { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.4em; }
 .pub-desc { color: var(--ink-soft); font-size: 0.98rem; max-width: var(--measure); }
@@ -447,17 +450,6 @@ hr {
   .person-card { grid-template-columns: 72px 1fr; }
   .faculty-block .person-photo,
   .faculty-block .person-fallback { width: 72px; height: 90px; }
-  .nav-toggle { display: inline-block; }
-  .site-nav {
-    display: none;
-    position: absolute;
-    left: 0; right: 0; top: 100%;
-    background: #0e141b;
-    border-bottom: 1px solid var(--line);
-    padding: 0.5rem 1rem 1rem;
-  }
-  .site-nav.is-open { display: block; }
-  .site-nav ul { flex-direction: column; gap: 0.55rem; }
   .site-header { position: sticky; }
   .brand-name { font-size: 0.95rem; }
 }

@@ -1,0 +1,7 @@
+osmnx>=2.0
+geopandas
+matplotlib
+pyyaml
+contextily
+osmium
+requests

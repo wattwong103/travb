@@ -1,0 +1,59 @@
+---
+title: "Access | Walk to urban rail in Bangkok"
+layout: default
+excerpt: "Walk-isochrone map to the nearest urban-rail station exit in Bangkok. 10 and 15 minutes at 4.5 km/h on the OpenStreetMap walk graph."
+permalink: /access/
+map: true
+---
+<div class="access-page">
+  <section class="access-intro wrap">
+    <p class="page-kicker">Access</p>
+    <h1>Walk to urban rail</h1>
+    <p class="lede">Minutes from a station exit, on the street network — not as the crow flies. White is under 10 minutes, orange 10 to 15, red more than 15.</p>
+  </section>
+
+  <div class="access-stage">
+    <div id="access-map"
+         role="region"
+         aria-label="Walk-isochrone map of Bangkok"
+         data-base="{{ '/access-data/' | relative_url }}"></div>
+    <div class="access-panel">
+      <fieldset>
+        <legend>View</legend>
+        <label><input type="radio" name="access-view" value="combined" checked> 10 / 15 min</label>
+        <label><input type="radio" name="access-view" value="gaps10"> Gaps beyond 10 min</label>
+        <label><input type="radio" name="access-view" value="gaps15"> Gaps beyond 15 min</label>
+      </fieldset>
+      <fieldset>
+        <legend>Layers</legend>
+        <label><input type="checkbox" id="tog-khet" checked> Districts</label>
+        <label><input type="checkbox" id="tog-rail" checked> Rail</label>
+        <label><input type="checkbox" id="tog-stations" checked> Stations</label>
+      </fieldset>
+      <p class="access-legend">
+        <span><i class="swatch swatch-w"></i> &lt; 10 min</span>
+        <span><i class="swatch swatch-o"></i> 10–15 min</span>
+        <span><i class="swatch swatch-r"></i> &gt; 15 min</span>
+      </p>
+      <p class="access-meta" id="access-meta">4.5 km/h · OSM walk graph</p>
+      <p><a class="btn" href="{{ '/access-data/access-16x9.png' | relative_url }}" download>Download 16:9 PNG</a></p>
+    </div>
+  </div>
+
+  <section class="access-notes wrap">
+    <h2>How it is built</h2>
+    <ul class="principles">
+      <li><strong>Origins</strong> Station exits (OSM subway entrances), not the station centroid. If no exit is mapped, the station node is used.</li>
+      <li><strong>Network</strong> OpenStreetMap walk graph. Speed 4.5 km/h (75 m/min). 10 minutes = 750 m on the network; 15 minutes = 1,125 m.</li>
+      <li><strong>Unions</strong> Isochrone per exit, unioned by station, then across all stations. White is the 10-minute union; orange is 15 minus 10; red is the study area minus 15.</li>
+      <li><strong>Study area</strong> All 50 Bangkok districts, plus districts in Nonthaburi, Samut Prakan, and Pathum Thani that contain a selected station.</li>
+      <li><strong>Lines</strong> BTS Sukhumvit, Silom, and Gold; MRT Blue, Purple, Yellow, and Pink; Airport Rail Link; SRT Dark Red and Light Red. Not BRT, boats, conventional SRT, or unopened Orange.</li>
+    </ul>
+    <p>Parks, rivers, and expressway boxes stay red when they have no walkable OSM edges. Missing exits in OSM make some stations look worse than they are. Speed is a pipeline setting, not a live control — the pages site cannot recompute the graph.</p>
+    <h2>Related lab work</h2>
+    <p>The Public Transport Accessibility Index (PTAI) is a demand-weighted generalized-cost index for 88 inner-Bangkok subdistricts. This map is only the walk to urban rail. They answer different questions; PTAI routing data cannot be republished here.</p>
+    <p><a href="{{ '/data/' | relative_url }}">GeoJSON and poster</a> · <a href="{{ '/research/' | relative_url }}">Research</a></p>
+  </section>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ '/js/access-map.js' | relative_url }}"></script>

@@ -8,10 +8,10 @@
     <nav class="site-nav" id="site-nav" aria-label="Primary">
       <ul>
         <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' %}aria-current="page"{% endif %}>Home</a></li>
+        <li><a href="{{ '/access/' | relative_url }}" {% if page.url == '/access/' %}aria-current="page"{% endif %}>Access</a></li>
         <li><a href="{{ '/research/' | relative_url }}" {% if page.url == '/research/' %}aria-current="page"{% endif %}>Research</a></li>
         <li><a href="{{ '/team/' | relative_url }}" {% if page.url == '/team/' %}aria-current="page"{% endif %}>People</a></li>
         <li><a href="{{ '/publications/' | relative_url }}" {% if page.url == '/publications/' %}aria-current="page"{% endif %}>Publications</a></li>
-        <li><a href="{{ '/blog/' | relative_url }}" {% if page.url == '/blog/' %}aria-current="page"{% endif %}>Blog</a></li>
         <li><a href="{{ '/news/' | relative_url }}" {% if page.url == '/news/' %}aria-current="page"{% endif %}>News</a></li>
         <li><a href="{{ '/data/' | relative_url }}" {% if page.url == '/data/' %}aria-current="page"{% endif %}>Data</a></li>
       </ul>

@@ -2,7 +2,6 @@
 title: "Travel Behavior Research Group | Department of Civil Engineering, Chulalongkorn University"
 layout: homelay
 excerpt: "The Travel Behavior Research Group studies how people move through Bangkok and what those choices mean for transport systems, planning, and policy."
-sitemap: false
 permalink: /
 ---
 <section class="hero">
@@ -12,12 +11,20 @@ permalink: /
 <p class="hero-meta">Department of Civil Engineering · Chulalongkorn University</p>
 </section>
 
-{% include home-slides.html %}
+<figure class="access-feature">
+<a href="{{ '/access/' | relative_url }}">
+<img src="{{ '/access-data/access-16x9.png' | relative_url }}" width="1920" height="1080" alt="Map of Bangkok walk access to urban rail: white within 10 minutes of a station exit, orange 10 to 15 minutes, red beyond 15 minutes.">
+</a>
+<figcaption>
+<a href="{{ '/access/' | relative_url }}">Walk access to urban rail</a>
+— 10 and 15 minutes from a station exit, on the OpenStreetMap walk graph. Open the interactive map.
+</figcaption>
+</figure>
 
 <p>The group is based in the <a href="https://civil.eng.chula.ac.th/web/">Department of Civil Engineering</a> at <a href="https://www.chula.ac.th/">Chulalongkorn University</a>. Work sits at the overlap of engineering, surveys, and planning: why a trip is made, how it is made, and what the network should do next.</p>
 
 <div class="section-head">
-<h2>Three lines of work</h2>
+<h2>Lines of work</h2>
 </div>
 <div class="pillars">
 <article class="pillar">
@@ -35,25 +42,12 @@ permalink: /
 <h3>Transportation Planning</h3>
 <p>Current networks, future demand, and projects that improve access.</p>
 </article>
+<article class="pillar">
+<span class="pillar-num">04</span>
+<h3>Walk access</h3>
+<p>How far is the walk to urban rail? <a href="{{ '/access/' | relative_url }}">10- and 15-minute isochrones across Bangkok</a>.</p>
+</article>
 </div>
 
 {% include home-people.html %}
 {% include news.html %}
-
-{% if site.posts.size > 0 %}
-<div class="section-head">
-<h2>From the blog</h2>
-<a href="{{ '/blog/' | relative_url }}">All posts</a>
-</div>
-<ol class="post-index">
-{% for post in site.posts limit:3 %}
-<li class="post-teaser">
-<time class="news-date" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%d %b %Y' }}</time>
-<div>
-<h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-{% if post.excerpt %}<p>{{ post.excerpt | strip_html | truncate: 160 }}</p>{% endif %}
-</div>
-</li>
-{% endfor %}
-</ol>
-{% endif %}

@@ -2,3 +2,9 @@ _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
+scripts/access/.venv/
+scripts/access/cache/
+vendor/bundle/
+.bundle/
+__pycache__/
+*.pyc

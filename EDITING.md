@@ -28,6 +28,8 @@ Someone with access to the GitHub repository (`wattwong103/travb`) must invite y
 
 Photos: upload a square-ish portrait. It will show on the People page.
 
+The **Access** map is not edited here. It is built by `scripts/access/build.py` and stored in `access-data/`.
+
 If a name or email looks like a placeholder (`xxxxx`, or a last name that is just `X`), the public site hides that person on purpose.
 
 Home slides: leave the image blank for a type-only banner. Do not reuse leftover Cambridge photos (`materials.jpg`, `printer-fleet.jpg`).
