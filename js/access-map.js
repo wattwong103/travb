@@ -125,9 +125,10 @@
         onEachFeature: function (feature, layer) {
           var p = feature.properties || {};
           var name = p.station || p.name || "Station";
-          var line = p.line ? "<br>" + p.line : "";
-          var n = p.exits ? "<br>" + p.exits + " mapped exits" : "";
-          layer.bindPopup("<strong>" + name + "</strong>" + line + n);
+          var bits = ["<strong>" + name + "</strong>"];
+          if (p.line) bits.push(p.line);
+          if (p.exits) bits.push(p.exits + " mapped exits");
+          layer.bindPopup(bits.join("<br>"));
           layer.on("click", function () {
             ensureIso(function () {
               if (!isoLayer) return;
@@ -148,7 +149,15 @@
       }).addTo(map);
 
       var bounds = classesLayer.getBounds();
-      if (bounds.isValid()) map.fitBounds(bounds, { padding: [16, 16] });
+      if (bounds.isValid()) {
+        var wide = window.innerWidth > 720;
+        map.fitBounds(bounds, {
+          paddingTopLeft: [wide ? 280 : 16, 16],
+          paddingBottomRight: [16, 16]
+        });
+      }
+      var loading = el.querySelector(".access-loading");
+      if (loading) loading.remove();
 
       if (meta) {
         var box = document.getElementById("access-meta");

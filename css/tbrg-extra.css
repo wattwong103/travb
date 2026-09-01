@@ -22,6 +22,11 @@
 .news-headline a:hover { color: var(--accent-hover); text-decoration: none; }
 
 .site-header { position: relative; }
+.site-nav a { letter-spacing: 0.08em; }
+.site-nav ul { gap: 0.15rem 1.05rem; }
+@media (max-width: 1240px) {
+  .brand-name { display: none; }
+}
 
 .access-feature {
   margin: 0 0 3.2rem;
@@ -82,10 +87,20 @@ main:has(.access-page) { padding-top: 0; }
   margin-bottom: 0.35rem;
 }
 .access-panel label {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.88rem;
-  margin: 0.2rem 0;
+  margin: 0.15rem 0;
+  min-height: 1.55rem;
   color: var(--ink-soft);
+  cursor: pointer;
+}
+.access-loading {
+  margin: 0;
+  padding: 2.4rem 1.2rem;
+  color: #444;
+  font-size: 0.95rem;
 }
 .access-legend {
   display: flex;
