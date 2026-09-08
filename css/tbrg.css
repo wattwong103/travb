@@ -460,5 +460,5 @@ hr {
 
 @media print {
   body { background: #fff; color: #111; }
-  .site-header, .site-footer, .nav-toggle { display: none; }
+  .site-header, .site-footer, .nav-toggle, .moved-banner { display: none; }
 }

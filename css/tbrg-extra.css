@@ -1,5 +1,17 @@
 /* Slides, blog, overflow, Access map (loaded after tbrg.css) */
 
+.moved-banner {
+  margin: 0;
+  padding: 0.55rem 1.5rem;
+  text-align: center;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+  background: var(--bg-raised);
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line-strong);
+}
+.moved-banner a { font-weight: 500; }
+
 .skip-link {
   position: absolute;
   left: 0.75rem;
